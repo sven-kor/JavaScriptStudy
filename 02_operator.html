@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    //일치,불일치
+    {
+      console.log(10 === '10'); //false
+      console.log(10 == '10'); // true
+    }
+    //Falsy : 타입이 달라도 false로 취급하는 값
+    {      
+      console.log(0 == false); //0 제외 다 true
+      console.log('' == false); //빈문자열 아니면 다 true
+    }
+    //논리 연산(&&, ||)
+    //Short Circuit : 앞에 확인해서 이미 결로 나면 뒤는 판단 안함.
+    //ex) false && a>10 -> 앞 false -> false a 판단 안함
+    {
+      let a = 'nice';
+      console.log(a || 'hello') //a에 값이 있으면 사용, 없으면 hello 사용
+    }
+    //널 병합 연산자(nullish) : ??를 사용해서 평가
+    {
+      let a; //undefined -> undefined
+      let b = null; //null -> object
+      console.log(typeof a, typeof b); //타입은 다르지만 둘다 nullish
+      console.log(a ?? 'hello'); // -> 'hello'
+      console.log(b ?? 'world'); // -> 'hello'
+
+    }
+
+
+  </script>
+</body>
+</html>

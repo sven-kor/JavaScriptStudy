@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /* var 선언*/
+    {
+      //초기 할당이 없으면 undefined 값을 가짐
+      var a; 
+      console.log(a, typeof a);
+
+      var a; //재 선언 가능 
+      a = 10; //number 타입 값 할당
+      a = 'hello world'; // 동적 할당 가능(string)
+      console.log(a, typeof a);
+    }
+    console.log(a, typeof a);  //스코프 밖에서 됨!
+
+    //let, const : 지역 변수 개념으로 사용 가능
+    {
+      let b; //초기 할당이 없으면 undefined 
+      const c = true; //초기할당 필수
+      b = 10;
+      b = 'hello'//동적 할당 특징은 그대로 유지
+      console.log(b);  
+      // let b; -> 재선언 불가 
+    }
+    //console.log(b); // 스코프를 벗어나면 접근 불가 
+
+    /* Template Literal : 백틱(`)으로 감싼 문자열 */
+    {
+      const age = 10;
+      const a = '나는' + age + '살입니다.';
+      const b = `나는 ${age}살입니다.` // `템플릿 리터럴` : 문자열 보간(표현식 삽입) 가능
+
+      console.log(a,b);
+    }
+
+      //Hoisting 
+    {
+      money = 1000;
+      console.log(money);
+      var money; // JavaScript 인터프리터가 var선언부를 가장 먼저 읽어 처리합니다. 
+      console.log(car);
+      var car = 'sonata'; //선언부를 먼저 읽지만, 할당은 순서대로. var car;, car = 'sonata'로 나눠짐
+      console.log(car);
+
+
+    }
+
+
+
+  </script>
+</body>
+</html>
