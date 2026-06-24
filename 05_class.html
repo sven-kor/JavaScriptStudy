@@ -14,11 +14,11 @@
       #price;
 
       //생성자
-      constructor(name, price, queantity = 1) {
+      constructor(name, price, quantity = 1) {
         this.name = name;
         // this.#price = price; //private 프로퍼니에 전달 -> 안좋음!(대비 안됨)
         this.price = price; //setter로 전달
-        this.quantity = queantity; //setter로 전달
+        this.quantity = quantity; //setter로 전달
       }
 
       get quantity() {
@@ -50,7 +50,7 @@
       }
 
       getSummary() {
-        return `${this.name} | 단가: ${this.#price} | 수량 ${this.#quantity} | 총가격: ${getTotalPrice()}`;
+        return `${this.name} | 단가: ${this.#price} | 수량 ${this.#quantity} | 총가격: ${this.getTotalPrice()}`;
       }
 
       //수량 추가
@@ -90,26 +90,27 @@
           console.error('할인율이 0보다 작거나 100보다 클 수 없습니다.')
           return;
         }
-        this.#discountRate = discountRate;
+        this.#discountRate = value;
       }
-      get price() {
-        return super.price;
-      }
-      set price(value){
-        super.price(value);
-      }
-      get quantity() {
-        return super.quantity;
-      }
-      set quantity(value) {
-        super.quantity(value);
-      }
+      // get price() {
+      //   return super.price;
+      // }
+      // set price(value){
+      //   super.price(value);
+      // }
+      // get quantity() {
+      //   return super.quantity;
+      // }
+      // set quantity(value) {
+      //   super.quantity(value);
+      // }
+
       //메서드 오버라이드
       getTotalPrice() {
-        return this.price * this.quantity * this.#discountRate //가격 * 수량
+        return super.price * super.quantity * (1-this.#discountRate/100) //가격 * 수량
       }
       getSummary() {
-        return `${this.name} | 단가: ${this.price} | 수량 ${this.quantity} | 총가격: ${getTotalPrice()} | 할인율: ${this.#discountRate}`;
+        return `${this.name} | 단가: ${super.price} | 수량 ${super.quantity} | 총가격: ${this.getTotalPrice()} | 할인율: ${this.#discountRate/100}`;
       }
       addQuantity(amount){
         if(amount <=0){
@@ -119,8 +120,9 @@
         this.quantity += amount; //Setter호출함
       }
     }
-    const item = new DiscountCartItem('냉장고',1000000,)
-
+    const item = new DiscountCartItem('냉장고',1000000,10,10);
+    console.log(item.getSummary());
+    
 
   </script>
 
