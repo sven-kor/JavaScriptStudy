@@ -70,5 +70,19 @@
   console.log(name.readOnly);  // true
 </script>
 
+<div>
+  <div id="user" data-user-id="123" data-role="admin">사용자</div>
+</div>
+<script>
+  const user = document.getElementById('user');
+
+  // 접근
+  console.log(user.dataset.userId); // "123" (하이픈이 카멜케이스로 변환됨)
+  console.log(user.dataset.role);   // "admin"
+
+  // 수정
+  user.dataset.role = 'guest';
+</script>
+
 </body>
 </html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!--인라인 이벤트-->
+  <button onclick="alert('Hello World')">클릭하세요</button>
+
+<button onclick="showMessage()">클릭하세요</button>
+<script>
+  function showMessage() {
+    alert('인라인 방식입니다.');
+  }
+</script>
+<!-- 인라인 방식의 이벤트 객체 :  반드시 event라는 이름으로 넘겨줘야함-->
+ <button onclick="fnInline(event)"> 인라인 이벤트 객체</button>
+ <script>
+  function fnInline(e){
+    console.log('Target:', e.target);
+  }
+ </script>
+<hr>
+<!--고전 이벤트--> 
+<button id = "myBtn" data-user-role="admin">클릭하세요</button>
+<script>
+  const btn = document.querySelector('#myBtn');
+
+// 첫 번째 핸들러 등록
+btn.onclick = function() {
+  console.log('첫 번째 작업');
+};
+
+// 두 번째 핸들러 등록 (첫 번째 핸들러가 제거됨)
+btn.onclick = function() {
+  console.log('두 번째 작업만 실행됩니다.');
+};
+//두 개 동작하게 하려면?
+function fn1() {
+  console.log('1번 작업')
+}
+function fn2() {
+  console.log('2번 작업')
+}
+
+btn.onclick = function() {
+  fn1();
+  fn2();
+}
+
+//이벤트 객체 사용하기  -> 이벤트 핸들러의 첫 매개변수로 선언하고 사용
+btn.onclick = function(e){
+  console.log('Type:',e.type)
+  console.log('Target:', e.target)
+  console.log('CurrentTarget:', e.currentTarget)
+  console.log('this:',this)//this는 함수, 모델에 따라 바인딩이 달라지므로 target으로 사용하기에 부적절하다!
+  console.log('role:', e.target.dataset.userRole)
+}
+</script>
+<hr>
+
+<!--표준 이벤트 모델-->
+<button id="ourBtn">클릭해주세유</button>
+<script>
+const ourBtn = document.querySelector('#ourBtn');
+
+const logHello = () => console.log('Hello');
+const logWorld = () => console.log('World');
+
+// 여러 개의 리스너 등록 가능 (둘 다 실행됨)
+ourBtn.addEventListener('click', logHello);
+ourBtn.addEventListener('click', logWorld);
+
+// 특정 리스너만 제거 가능
+ourBtn.removeEventListener('click', logHello);
+ourBtn.removeEventListener('click', logWorld);
+//이벤트 객체
+ourBtn.addEventListener('click', function(e){
+  console.log('Target:', e.target);
+  console.log('CurrentTarget:', e.currentTarget);
+})
+</script>
+
+<hr>
+<style>
+#my-table {
+  border-collapse: collapse; /* 테두리 합치기 */
+}
+
+#my-table th,
+#my-table td {
+  border: 20px solid black;
+  padding: 10px;
+  text-align: center;
+}
+
+</style>
+<table id="my-table">
+  <tboby>
+    <tr>
+      <td>사과</td>
+      <td>배</td>
+      <td>복숭아</td>
+    </tr>
+    <tr>
+      <td>망고</td>
+    
+      <td>바나나</td>
+      <td>딸기</td>
+    </tr>
+    <tr>
+      <td>오렌지</td>
+      <td>포도</td>
+      <td>메론</td>
+    </tr>
+  </tboby>
+</table>
+<script>
+  //부모 요소인 my-table 취득
+  const myTable = document.getElementById('my-table');
+  //부모 요소에 클릭 이벤트 하나만 등록(자식 요소의 클릭 이벤트를 위임받는 이벤트)
+  myTable.addEventListener('click', function(e){
+    //핵심. 실제로 클릭한 가장 안 쪽 요소(사용자가 클릭한 요소)
+    const clickedElement = e.target;
+    //td 클릭을 확인하기
+    if(clickedElement.tagName !== 'TD') {
+      return;
+    }
+    //td 태그 내부 텍스트(textContent)가져오기
+    alert(`선택한 과일: ${clickedElement.textContent}`);
+  })
+</script>
+
+<ul id="menuContainer" style="list-style: none; padding: 0;">
+  <li>
+    <button class="menu-item" data-menu="home">
+      <i class="icon">🏠</i>
+      <span>홈으로 가기</span>
+    </button>
+  </li>
+  <li>
+    <button class="menu-item" data-menu="profile">
+      <i class="icon">👤</i>
+      <span>프로필 설정</span>
+    </button>
+  </li>
+  <li>
+    <button class="menu-item" data-menu="settings">
+      <i class="icon">⚙️</i>
+      <span>시스템 환경</span>
+    </button>
+  </li>
+</ul>
+<script>
+  const menuContainer = document.getElementById('menuContainer');
+
+  // [핵심1] 부모 요소에 이벤트 리스너 등록
+  menuContainer.addEventListener('click', (e) => {
+    
+    // [핵심2] e.target에서부터 가장 가까운 .menu-item 조상을 찾습니다.
+    // (e.target: 클릭한 가장 안쪽 요소)
+    // 클릭된 게 <i>이든, <span>이든 최종적으로 <button>을 찾아냅니다.
+    const btn = e.target.closest('.menu-item');
+
+    // Early Return //null값이면 false니까 !false해서 true면! -> null이면 리턴.
+    if (!btn) return;
+    if (!menuContainer.contains(btn)) return;
+
+    // Business Login
+    const menuName = btn.dataset.menu;
+    console.log(`선택된 메뉴: ${menuName}`);
+  });
+</script>
+
+<!-- 전파 중단 -->
+<div id="overlay" style="border: 1px solid gray; padding: 50px;">
+  <!--위 div태그 닫기 전에 안에 들어갔으므로 아래 태그는 자식이 된다. -->
+  <div id="content" style="background-color: silver;">
+    <h2>모달 창 제목</h2>
+    <p>모달 내부를 클릭해도 모달은 닫히지 않습니다.</p>
+  </div>
+</div>
+
+<script>
+  const overlay = document.getElementById('overlay');
+  const content = document.getElementById('content');
+  
+  // 배경을 클릭하면 모달을 닫음
+  overlay.addEventListener('click', () => {
+    console.log('배경이 클릭되어 모달을 닫습니다.');
+    overlay.style.display = 'none';
+  });
+
+  // 모달 내부 콘텐츠를 클릭했을 때
+  content.addEventListener('click', (e) => {
+    e.stopPropagation();  // 이벤트 버블링 중단
+    console.log('부모(overlay)의 클릭 이벤트가 실행되지 않게 합니다.');
+  });
+</script>
+
+<hr>
+<!-- 기본 이벤트 취소 -->
+ <form id="user-form">
+    <input type="text" id="username" name="username">
+    <button typr="submit"> 제출 </button>
+ </form>
+
+ <script>
+  const userForm = document.getElementById('user-form')
+  userForm.addEventListener('submit',function(e){
+    console.log('제출 완료');
+    e.preventDefault();
+  })
+ </script>
+</body>
+</html>

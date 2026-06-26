@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- XMLHttpRequest 객체-->
+   <form id="agify-form">
+    <label for="name">이름</label>
+    <input type="text" id="name">
+    <button type="submit">제출</button>
+   </form>
+   <div id="agify-result">여기에 결과가 노출됩니다.</div>
+   <script>
+    const agifyForm = document.getElementById('agify-form');
+    agifyForm.addEventListener('submit', e => {
+      e.preventDefault(); //폼 제출은 동기 처리 방식이므로, 비동기 요청 시 항상 취소해야합니다.
+      //이제 부터 비동기 요청
+      const xhr = new XMLHttpRequest();
+      xhr.open('get', `https://api.agify.io/?name=${document.getElementById('name').value}`);
+      xhr.addEventListener('readystatechange', () => {
+        if(xhr.readyState ===4){
+          if(xhr.status === 200){
+            const result = xhr.responseText;//응답 결과가 JSON인 경우 "JSON문자열"로 받아옵니다. 
+            const obj = JSON.parse(result);//JSON문자열 -> JS객체로 반환
+            document.getElementById('agify-result').textContent = `count=${obj.count}, name=${obj.name}, age=${obj.age}`;
+
+          }
+        }
+      })
+      xhr.send();
+    })
+   </script>
+
+   <!-- Promise 객체 -->
+    <button id ="btn"> 요청</button>
+<script>
+
+  //promise 필요성 이해하기
+  document.getElementById('btn').addEventListener('click', e => {
+    let result;
+    const xhr = new XMLHttpRequest();
+    xhr.open('get', 'https://jsonplaceholder.typicode.com/todos/1');
+    xhr.addEventListener('readystatechange', () => {
+      if(xhr.readyState ===4) {
+        if(xhr.status === 200) {
+          const {title} = JSON.parse(xhr.responseText); //객체 구조 분해 할당
+          result = title;
+        }
+      }
+    })
+    xhr.send();
+    console.log(result)
+  })
+
+  //<!-- promise 도입 -->
+
+  //Promise 생성
+  function fetchData(todoId){
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+    xhr.open('get', `https://jsonplaceholder.typicode.com/todos/${todoId}`);
+    xhr.addEventListener('readystatechange', () => {
+      if(xhr.readyState ===4) {
+        if(xhr.status === 200) {
+          //약속 이행(fulfilled)
+           resolve(JSON.parse(xhr.responseText)) //객체 구조 분해 할당
+        } else {
+          reject(new Error(`요청 실패 (상태코드 : ${xhr.status}})`))
+        }
+      }
+    })
+    xhr.send();
+    })
+    
+  }
+  
+
+  //Promise 소비
+  document.getElementById('btn').addEventListener('click', e => {
+    fetchTodoData(1).then((obj) => {
+      console.log('API응답 데이터:', obj)
+    })
+    .catch((error) => {
+      console.error(error.message)
+    })
+    
+  })
+</script>
+
+</body>
+</html>
